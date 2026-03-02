@@ -20,9 +20,19 @@ export default function Home() {
   const startSharing = async () => {
     try {
       const stream = await navigator.mediaDevices.getDisplayMedia({
-        video: true,
+        video: {
+          width: { ideal: 1920, max: 3840 },
+          height: { ideal: 1080, max: 2160 },
+          frameRate: { ideal: 30, max: 60 },
+        },
         audio: true,
       });
+
+      // Optimize for detail/text clarity (good for coding/docs)
+      const videoTrack = stream.getVideoTracks()[0];
+      if (videoTrack && "contentHint" in videoTrack) {
+        videoTrack.contentHint = "detail";
+      }
       
       streamRef.current = stream;
       if (videoRef.current) {
@@ -56,7 +66,16 @@ export default function Home() {
 
         // Add local stream tracks to the peer connection
         stream.getTracks().forEach((track) => {
-          peerConnection.addTrack(track, stream);
+          const sender = peerConnection.addTrack(track, stream);
+          if (track.kind === "video") {
+            const params = sender.getParameters();
+            if (!params.encodings) {
+              params.encodings = [{}];
+            }
+            // Set max bitrate to 6 Mbps for high quality screen sharing
+            params.encodings[0].maxBitrate = 6000000; 
+            sender.setParameters(params).catch((e) => console.error("Error setting bitrate:", e));
+          }
         });
 
         peerConnection.onicecandidate = (event) => {
