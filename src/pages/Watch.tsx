@@ -234,9 +234,48 @@ export default function Watch() {
               <p className="text-xs text-zinc-500 font-mono">{roomId}</p>
             </div>
           </div>
-          <Button variant="outline" size="sm" onClick={() => navigate("/")} className="border-zinc-700 text-zinc-300 hover:bg-zinc-800 hover:text-white">
-            Leave
-          </Button>
+
+          <div className="flex items-center gap-3">
+            {/* Windowed Mode Controls */}
+            <div className="hidden md:flex items-center gap-1 bg-zinc-800/50 p-1 rounded-lg border border-zinc-700/50">
+              <button
+                onClick={toggleMute}
+                className="p-2 text-zinc-400 hover:text-white hover:bg-zinc-700 rounded-md transition-colors"
+                title={isMuted ? "Unmute Local Audio" : "Mute Local Audio"}
+              >
+                {isMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
+              </button>
+              <div className="w-px h-4 bg-zinc-700 mx-1" />
+              <button
+                onClick={() => sendVolumeCommand("down")}
+                className="p-2 text-zinc-400 hover:text-white hover:bg-zinc-700 rounded-md transition-colors"
+                title="Remote Volume Down"
+              >
+                <Minus className="w-4 h-4" />
+              </button>
+              <button
+                onClick={() => sendVolumeCommand("up")}
+                className="p-2 text-zinc-400 hover:text-white hover:bg-zinc-700 rounded-md transition-colors"
+                title="Remote Volume Up"
+              >
+                <Plus className="w-4 h-4" />
+              </button>
+            </div>
+
+            <button
+              onClick={toggleFullScreen}
+              className="hidden md:flex p-2.5 text-zinc-400 hover:text-white hover:bg-zinc-800 rounded-lg border border-zinc-700/50 transition-colors"
+              title="Enter Fullscreen"
+            >
+              <Maximize className="w-4 h-4" />
+            </button>
+
+            <div className="w-px h-6 bg-zinc-800 mx-1" />
+
+            <Button variant="outline" size="sm" onClick={() => navigate("/")} className="border-zinc-700 text-zinc-300 hover:bg-zinc-800 hover:text-white">
+              Leave
+            </Button>
+          </div>
         </div>
 
         <div 
@@ -296,7 +335,7 @@ export default function Watch() {
           
           {status === "connected" && (
              <>
-               <div className="absolute bottom-4 left-4 flex items-center gap-2 z-10 opacity-0 group-hover:opacity-100 focus-within:opacity-100 transition-opacity">
+               <div className="absolute bottom-4 left-4 flex items-center gap-2 z-10 opacity-0 group-hover:opacity-100 focus-within:opacity-100 transition-opacity md:hidden">
                  <button
                    onClick={(e) => {
                      e.stopPropagation();
@@ -337,7 +376,7 @@ export default function Watch() {
                    e.stopPropagation();
                    toggleFullScreen();
                  }}
-                 className="absolute bottom-4 right-4 p-2 bg-black/50 text-white rounded-lg hover:bg-black/70 transition-colors z-10 opacity-0 group-hover:opacity-100 focus:opacity-100"
+                 className="absolute bottom-4 right-4 p-2 bg-black/50 text-white rounded-lg hover:bg-black/70 transition-colors z-10 opacity-0 group-hover:opacity-100 focus:opacity-100 md:hidden"
                  title={isFullscreen ? "Exit Fullscreen" : "Enter Fullscreen"}
                >
                  {isFullscreen ? <Minimize className="w-5 h-5" /> : <Maximize className="w-5 h-5" />}
