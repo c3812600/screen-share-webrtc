@@ -1,0 +1,5 @@
+{
+  "name": "Screen Share WebRTC",
+  "description": "A WebRTC-based screen sharing application that allows users to share their screen or window with others via a generated URL.",
+  "requestFramePermissions": ["camera", "microphone", "display-capture"]
+}
